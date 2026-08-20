@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papawestray Article</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 60px;
+        }
+
+        /* 主容器（纯白无边框，延续一致风格） */
+        .main-container {
+            width: 100%;
+            max-width: 860px;
+            background: #ffffff;
+            padding: 40px 40px 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 文档展示容器（圆角阴影，与之前图片wrapper风格呼应） */
+        .document-viewer {
+            display: inline-block;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+            background: #f8f9fb;
+            line-height: 0;
+            margin-bottom: 10px;
+        }
+
+        .doc-iframe {
+            display: block;
+            width: 100%;
+            height: 620px;
+            border: none;
+            background: #f8f9fb;
+        }
+
+        /* 文档说明文字 */
+        .doc-caption {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #95a5a6;
+            letter-spacing: 0.04em;
+            line-height: 1.6;
+        }
+
+        /* 底部提示信息 */
+        .footer-note {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eef1f5;
+            font-size: 0.85rem;
+            color: #b0b8c1;
+            letter-spacing: 0.03em;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 20px 16px 22px;
+                margin-top: 15px;
+            }
+
+            .document-viewer {
+                border-radius: 10px;
+            }
+
+            .doc-iframe {
+                height: 420px;
+            }
+
+            body {
+                padding: 20px 12px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <!--
+        ============================================
+           文档展示区域（iframe 嵌入 Word 文档）
+           【重要】请将下方 src 属性替换为你的文档路径。
+
+           使用方式说明（三选一）：
+
+           方式一：使用 Microsoft Office Online 预览（推荐，支持 .docx / .doc / .pptx 等）
+           src="https://view.officeapps.live.com/op/embed.aspx?src=你的文档公网URL"
+
+           方式二：使用 Google Docs Viewer 预览
+           src="https://docs.google.com/gview?url=你的文档公网URL&embedded=true"
+
+           方式三：直接使用文档的相对/绝对路径（浏览器行为取决于服务器配置）
+           src="./docs/我的文档.docx"
+           src="/files/sample.docx"
+
+           注意：
+           - 方式一和方式二要求文档托管在可公开访问的服务器上（需完整URL）
+           - 如果文档为本地路径且未通过HTTP服务提供，浏览器通常会触发下载
+           - 当前 src 留空，请根据实际情况填写
+        ============================================
+        -->
+        <div class="document-viewer">
+            <iframe
+            class="doc-iframe"
+            src="./A00002.pdf"
+            title="Papawestray Article"
+            allowfullscreen
+            loading="lazy"
+            >
+            <p>您的浏览器不支持嵌入式框架,哦不</p>
+        </iframe>
+    </div>
+
+    <!-- 文档说明 -->
+    <p class="doc-caption">
+        Papawestray Article
+    </p>
+
+    <!-- 底部提示 -->
+    <p class="footer-note">
+        papawestray all rights reserved
+    </p>
+
+</div>
+
+</body>
+</html>
