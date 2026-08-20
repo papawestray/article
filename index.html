@@ -1,275 +1,146 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>W.M.H</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<title>文章导航</title>
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 60px;
+        }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
-    "Microsoft YaHei",sans-serif;
-}
+        /* 主容器（纯白无边框，延续一致风格） */
+        .main-container {
+            width: 100%;
+            max-width: 860px;
+            background: #ffffff;
+            padding: 40px 40px 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-body{
-    background:#f7f7f7;
-    color:#222;
-}
+        /* 文档展示容器（圆角阴影，与之前图片wrapper风格呼应） */
+        .document-viewer {
+            display: inline-block;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+            background: #f8f9fb;
+            line-height: 0;
+            margin-bottom: 10px;
+        }
 
-/* 顶部 */
-header{
-    text-align:center;
-    padding:60px 20px 40px;
-}
+        .doc-iframe {
+            display: block;
+            width: 100%;
+            height: 620px;
+            border: none;
+            background: #f8f9fb;
+        }
 
-header h1{
-    font-size:40px;
-    font-weight:700;
-}
+        /* 文档说明文字 */
+        .doc-caption {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #95a5a6;
+            letter-spacing: 0.04em;
+            line-height: 1.6;
+        }
 
-header p{
-    margin-top:15px;
-    color:#777;
-}
+        /* 底部提示信息 */
+        .footer-note {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eef1f5;
+            font-size: 0.85rem;
+            color: #b0b8c1;
+            letter-spacing: 0.03em;
+            line-height: 1.6;
+        }
 
-/* 搜索 */
-.search{
-    width:90%;
-    max-width:600px;
-    margin:20px auto 40px;
-}
+        @media (max-width: 600px) {
+            .main-container {
+                padding: 20px 16px 22px;
+                margin-top: 15px;
+            }
 
-.search input{
-    width:100%;
-    padding:15px 20px;
-    border:none;
-    border-radius:12px;
-    background:white;
-    box-shadow:0 5px 20px rgba(0,0,0,.06);
-    font-size:16px;
-    outline:none;
-}
+            .document-viewer {
+                border-radius: 10px;
+            }
 
+            .doc-iframe {
+                height: 420px;
+            }
 
-/* 分类 */
-.category{
-    max-width:1100px;
-    margin:auto;
-    padding:0 20px;
-}
-
-.category h2{
-    margin:30px 0 20px;
-    font-size:22px;
-}
-
-
-/* 文章卡片 */
-.article-list{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(260px,1fr));
-    gap:20px;
-}
-
-
-.article{
-    background:white;
-    padding:25px;
-    border-radius:16px;
-    transition:.3s;
-    cursor:pointer;
-    box-shadow:0 5px 20px rgba(0,0,0,.05);
-}
-
-
-.article:hover{
-    transform:translateY(-5px);
-    box-shadow:0 10px 30px rgba(0,0,0,.1);
-}
-
-
-.article h3{
-    margin-bottom:12px;
-}
-
-
-.article p{
-    color:#777;
-    line-height:1.6;
-    font-size:14px;
-}
-
-
-.tag{
-    display:inline-block;
-    margin-top:15px;
-    padding:5px 12px;
-    background:#eee;
-    border-radius:20px;
-    font-size:12px;
-}
-
-
-
-/* 底部 */
-footer{
-    text-align:center;
-    padding:50px 20px;
-    color:#999;
-    font-size:14px;
-}
-
-</style>
-
+            body {
+                padding: 20px 12px 40px;
+            }
+        }
+    </style>
 </head>
-
-
 <body>
 
+    <div class="main-container">
 
-<header>
+        <!--
+        ============================================
+           文档展示区域（iframe 嵌入 Word 文档）
+           【重要】请将下方 src 属性替换为你的文档路径。
 
-<h1>文章导航</h1>
+           使用方式说明（三选一）：
 
-<p>ppw的一切文献</p>
+           方式一：使用 Microsoft Office Online 预览（推荐，支持 .docx / .doc / .pptx 等）
+           src="https://view.officeapps.live.com/op/embed.aspx?src=你的文档公网URL"
 
-</header>
+           方式二：使用 Google Docs Viewer 预览
+           src="https://docs.google.com/gview?url=你的文档公网URL&embedded=true"
 
+           方式三：直接使用文档的相对/绝对路径（浏览器行为取决于服务器配置）
+           src="./docs/我的文档.docx"
+           src="/files/sample.docx"
 
+           注意：
+           - 方式一和方式二要求文档托管在可公开访问的服务器上（需完整URL）
+           - 如果文档为本地路径且未通过HTTP服务提供，浏览器通常会触发下载
+           - 当前 src 留空，请根据实际情况填写
+        ============================================
+        -->
+        <div class="document-viewer">
+            <iframe
+            class="doc-iframe"
+            src="./W.pdf"
+            title="Word 文档预览"
+            allowfullscreen
+            loading="lazy"
+            >
+            <p>您的浏览器不支持嵌入式框架，请直接访问文档链接。</p>
+        </iframe>
+    </div>
 
-<div class="search">
+    <!-- 文档说明 -->
+    <p class="doc-caption">
+        Papawestray Article
+    </p>
 
-<input 
-id="search"
-placeholder="按标题搜索,或按文章编号搜索"
-oninput="searchArticle()">
-
-</div>
-
-
-
-<section class="category">
-
-<h2>全部文章</h2>
-
-
-<div class="article-list" id="articles">
-
-
-<div class="article"
-onclick="openArticle('https://papawestray.github.io/article/wmh')">
-
-<h3>W.M.H</h3>
-
-<p>
-00001
-</p>
-
-<span class="tag">
-娱乐向
-</span>
-
-</div>
-
-
-
-<div class="article"
-onclick="openArticle('https://papawestray.github.io/article/mtin')">
-
-<h3>M.Tin</h3>
-
-<p>
-00002
-</p>
-
-<span class="tag">
-科普向
-</span>
+    <!-- 底部提示 -->
+    <p class="footer-note">
+        papawestray all rights reserved
+    </p>
 
 </div>
-
-
-
-<div class="article"
-onclick="openArticle('article3.html')">
-
-<h3>第三篇文章</h3>
-
-<p>
-更多文章敬请期待...
-</p>
-
-<span class="tag">
-，
-</span>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-
-<footer>
-© 2026 Papawestray.github.io
-</footer>
-
-
-
-<script>
-
-
-function openArticle(url){
-
-    window.location.href=url;
-
-}
-
-
-// 搜索功能
-
-function searchArticle(){
-
-let keyword=
-document.getElementById("search").value
-.toLowerCase();
-
-
-let articles=
-document.querySelectorAll(".article");
-
-
-articles.forEach(article=>{
-
-let text=
-article.innerText.toLowerCase();
-
-
-if(text.includes(keyword)){
-
-article.style.display="block";
-
-}else{
-
-article.style.display="none";
-
-}
-
-});
-
-
-}
-
-
-</script>
-
 
 </body>
 </html>
