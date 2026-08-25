@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Papawestray Article</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
+    "Microsoft YaHei",sans-serif;
+}
+
+body{
+    background:#f7f7f7;
+    color:#222;
+}
+
+/* 顶部 */
+header{
+    text-align:center;
+    padding:60px 20px 40px;
+}
+
+header h1{
+    font-size:40px;
+    font-weight:700;
+}
+
+header p{
+    margin-top:15px;
+    color:#777;
+}
+
+/* 搜索 */
+.search{
+    width:90%;
+    max-width:600px;
+    margin:20px auto 40px;
+}
+
+.search input{
+    width:100%;
+    padding:15px 20px;
+    border:none;
+    border-radius:12px;
+    background:white;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+    font-size:16px;
+    outline:none;
+}
+
+
+/* 分类 */
+.category{
+    max-width:1100px;
+    margin:auto;
+    padding:0 20px;
+}
+
+.category h2{
+    margin:30px 0 20px;
+    font-size:22px;
+}
+
+
+/* 文章卡片 */
+.article-list{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+}
+
+
+.article{
+    background:white;
+    padding:25px;
+    border-radius:16px;
+    transition:.3s;
+    cursor:pointer;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+
+.article:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+
+
+.article h3{
+    margin-bottom:12px;
+}
+
+
+.article p{
+    color:#777;
+    line-height:1.6;
+    font-size:14px;
+}
+
+
+.tag{
+    display:inline-block;
+    margin-top:15px;
+    padding:5px 12px;
+    background:#eee;
+    border-radius:20px;
+    font-size:12px;
+}
+
+
+
+/* 底部 */
+footer{
+    text-align:center;
+    padding:50px 20px;
+    color:#999;
+    font-size:14px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>文章导航</h1>
+
+<p>ppw的一切文献</p>
+
+</header>
+
+
+
+<div class="search">
+
+<input 
+id="search"
+placeholder="按标题搜索,或按文章编号搜索"
+oninput="searchArticle()">
+
+</div>
+
+
+
+<section class="category">
+
+<h2>全部文章</h2>
+
+
+<div class="article-list" id="articles">
+
+
+<div class="article"
+onclick="openArticle('https://papawestray.github.io/article/A00001')">
+
+<h3>W.M.H</h3>
+
+<p>
+A00001
+</p>
+
+<span class="tag">
+娱乐向
+</span>
+
+</div>
+
+
+
+<div class="article"
+onclick="openArticle('https://papawestray.github.io/article/A00002')">
+
+<h3>M.Tin</h3>
+
+<p>
+A00002
+</p>
+
+<span class="tag">
+科普向
+</span>
+
+</div>
+
+
+
+<div class="article"
+onclick="openArticle('https://papawestray.github.io/article/A00003')">
+
+<h3>2026数学暑假作业:综合练习1</h3>
+
+<p>
+A00003
+</p>
+
+<span class="tag">
+资源向
+</span>
+
+</div>
+
+
+<div class="article" onclick="openArticle('https://papawestray.github.io/article/A00004')">
+<h3>2025级13班罚站记录以及榜单</h3>
+<p>
+A00004
+</p>
+<span class="tag">资源向</span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00005
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00006
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00007
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00008
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00009
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00010
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00011
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00012
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00013
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00014
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00015
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00016
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00017
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00018
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00019
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00020
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00021
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00022
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00023
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00024
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00025
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00026
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00027
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00028
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00029
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00030
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00031
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00032
+</p>
+<span class="tag"></span>
+</div>
+
+<div class="article" onclick="openArticle('')">
+<h3></h3>
+<p>
+A00033
+</p>
+<span class="tag"></span>
+</div>
+
+</div>
+
+</section>
+
+
+
+<footer>
+© 2026 Papawestray.github.io
+</footer>
+
+
+
+<script>
+
+
+function openArticle(url){
+
+    window.location.href=url;
+
+}
+
+
+// 搜索功能
+
+function searchArticle(){
+
+let keyword=
+document.getElementById("search").value
+.toLowerCase();
+
+
+let articles=
+document.querySelectorAll(".article");
+
+
+articles.forEach(article=>{
+
+let text=
+article.innerText.toLowerCase();
+
+
+if(text.includes(keyword)){
+
+article.style.display="block";
+
+}else{
+
+article.style.display="none";
+
+}
+
+});
+
+
+}
+
+
+</script>
+
+
+</body>
+</html>
