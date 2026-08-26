@@ -32,36 +32,6 @@
             margin-top: 20px;
         }
 
-        /* 顶部工具栏（选择文件夹按钮） */
-        .folder-bar {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .upload-btn {
-            display: inline-block;
-            padding: 8px 18px;
-            background: #f0f2f5;
-            color: #555;
-            font-size: 0.85rem;
-            border-radius: 20px;
-            cursor: pointer;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            transition: all 0.2s ease;
-        }
-
-        .upload-btn:hover {
-            background: #e4e7ed;
-            color: #000;
-        }
-
-        .upload-btn input {
-            display: none;
-        }
-
         /* 图片画廊容器 */
         .gallery-viewer {
             position: relative;
@@ -75,12 +45,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* 空状态提示 */
-        .empty-tips {
-            color: #b0b8c1;
-            font-size: 0.9rem;
         }
 
         /* 单张图片 stage */
@@ -192,9 +156,7 @@
             object-fit: cover;
         }
 
-        .thumb-item:hover {
-            opacity: 0.85;
-        }
+        .thumb-item:hover { opacity: 0.85; }
 
         .thumb-item.active {
             opacity: 1;
@@ -229,32 +191,22 @@
 
     <div class="main-container">
 
-        <!-- 选择文件夹控件 -->
-        <div class="folder-bar">
-            <label class="upload-btn">
-                📁 选择本地图片文件夹
-                <input type="file" id="folderInput" webkitdirectory directory multiple accept="image/*">
-            </label>
-        </div>
-
         <!-- 图片阅览容器 -->
         <div class="gallery-viewer" id="galleryViewer">
             
-            <div class="empty-tips" id="emptyTips">请点击上方按钮选择包含图片的文件夹</div>
-
-            <button class="nav-btn prev" id="prevBtn" style="display: none;" title="上一张 (←)">
+            <button class="nav-btn prev" id="prevBtn" title="上一张 (←)">
                 <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
             </button>
 
             <div class="image-stage">
-                <img id="currentImage" src="" alt="Gallery Image" style="display: none;">
+                <img id="currentImage" src="" alt="Gallery Image">
             </div>
 
-            <button class="nav-btn next" id="nextBtn" style="display: none;" title="下一张 (→)">
+            <button class="nav-btn next" id="nextBtn" title="下一张 (→)">
                 <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
             </button>
 
-            <div class="page-badge" id="pageBadge" style="display: none;">0 / 0</div>
+            <div class="page-badge" id="pageBadge">0 / 0</div>
         </div>
 
         <!-- 底部缩略图导航栏 -->
@@ -268,51 +220,30 @@
     </div>
 
     <script>
-        let galleryData = []; // 动态存储图片 Blob URL
+        // ============================================
+        //  文件夹与文件名批量配置区域
+        // ============================================
+        const CONFIG = {
+            folder: './20260824/',   // 相对路径文件夹
+            prefix: '000',            // 图片文件名前缀（如果没有前缀留空即可，例如 'pic_' 或 ''）
+            extension: '-new.jpg',     // 图片文件后缀 (.jpg / .png / .webp 等)
+            startIndex: 1,         // 起始序号
+            endIndex: 118           // 结束序号 (修改此数值决定读取多少张)
+        };
+
+        // 自动按自然顺序生成图片路径数组
+        let galleryData = [];
+        for (let i = CONFIG.startIndex; i <= CONFIG.endIndex; i++) {
+            galleryData.push(`${CONFIG.folder}${CONFIG.prefix}${i}${CONFIG.extension}`);
+        }
+
         let currentIndex = 0;
 
-        const folderInput = document.getElementById('folderInput');
         const currentImgEl = document.getElementById('currentImage');
-        const emptyTips = document.getElementById('emptyTips');
         const badgeEl = document.getElementById('pageBadge');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const thumbsBar = document.getElementById('thumbnailsBar');
-
-        // 监听文件夹选择
-        folderInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            
-            // 1. 过滤出图片格式
-            const imageFiles = files.filter(file => file.type.startsWith('image/'));
-
-            if (imageFiles.length === 0) {
-                alert('所选文件夹中未找到图片！');
-                return;
-            }
-
-            // 2. 按照图片文件名自然排序 (例如: 1, 2, 10，而不是 1, 10, 2)
-            imageFiles.sort((a, b) => 
-                a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
-            );
-
-            // 3. 释放之前创建的本地内存 URL
-            galleryData.forEach(url => URL.revokeObjectURL(url));
-
-            // 4. 生成可供浏览器读取的临时本地 URL 列表
-            galleryData = imageFiles.map(file => URL.createObjectURL(file));
-
-            // 5. 界面状态显示
-            emptyTips.style.display = 'none';
-            currentImgEl.style.display = 'block';
-            prevBtn.style.display = 'flex';
-            nextBtn.style.display = 'flex';
-            badgeEl.style.display = 'block';
-
-            currentIndex = 0;
-            initThumbnails();
-            updateGallery();
-        });
 
         // 初始化缩略图
         function initThumbnails() {
@@ -330,7 +261,7 @@
             });
         }
 
-        // 更新视图
+        // 更新当前页面展示
         function updateGallery() {
             if (galleryData.length === 0) return;
             const url = galleryData[currentIndex];
@@ -377,6 +308,12 @@
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') prevImage();
             if (e.key === 'ArrowRight') nextImage();
+        });
+
+        // 页面初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            initThumbnails();
+            updateGallery();
         });
     </script>
 </body>
