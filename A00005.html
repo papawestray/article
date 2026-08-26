@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papawestray Image Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 60px;
+            color: #333;
+        }
+
+        /* 主容器 */
+        .main-container {
+            width: 100%;
+            max-width: 860px;
+            background: #ffffff;
+            padding: 40px 40px 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 顶部工具栏（选择文件夹按钮） */
+        .folder-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 8px 18px;
+            background: #f0f2f5;
+            color: #555;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .upload-btn:hover {
+            background: #e4e7ed;
+            color: #000;
+        }
+
+        .upload-btn input {
+            display: none;
+        }
+
+        /* 图片画廊容器 */
+        .gallery-viewer {
+            position: relative;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+            background: #f8f9fb;
+            margin-bottom: 15px;
+            min-height: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 空状态提示 */
+        .empty-tips {
+            color: #b0b8c1;
+            font-size: 0.9rem;
+        }
+
+        /* 单张图片 stage */
+        .image-stage {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            user-select: none;
+        }
+
+        .image-stage img {
+            max-width: 100%;
+            max-height: 580px;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: opacity 0.3s ease;
+        }
+
+        /* 左右翻页按钮 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s ease;
+            color: #555;
+            z-index: 10;
+        }
+
+        .nav-btn:hover {
+            background: #ffffff;
+            color: #000;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .nav-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .nav-btn.prev { left: 16px; }
+        .nav-btn.next { right: 16px; }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* 悬浮页码指示器 */
+        .page-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.55);
+            color: #ffffff;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.05em;
+            font-weight: 500;
+            z-index: 10;
+        }
+
+        /* 缩略图控制区 */
+        .thumbnails-bar {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            padding: 8px 0;
+            overflow-x: auto;
+            max-width: 100%;
+            scrollbar-width: thin;
+        }
+
+        .thumb-item {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.5;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            background: #f0f2f5;
+        }
+
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumb-item:hover {
+            opacity: 0.85;
+        }
+
+        .thumb-item.active {
+            opacity: 1;
+            border-color: #2c3e50;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        /* 底部提示信息 */
+        .footer-note {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eef1f5;
+            font-size: 0.85rem;
+            color: #b0b8c1;
+            letter-spacing: 0.03em;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .main-container { padding: 20px 16px 22px; margin-top: 15px; }
+            .gallery-viewer { border-radius: 10px; min-height: 360px; }
+            .image-stage img { max-height: 380px; }
+            .nav-btn { width: 36px; height: 36px; }
+            .nav-btn.prev { left: 8px; }
+            .nav-btn.next { right: 8px; }
+            body { padding: 20px 12px 40px; }
+            .thumb-item { width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <!-- 选择文件夹控件 -->
+        <div class="folder-bar">
+            <label class="upload-btn">
+                📁 选择本地图片文件夹
+                <input type="file" id="folderInput" webkitdirectory directory multiple accept="image/*">
+            </label>
+        </div>
+
+        <!-- 图片阅览容器 -->
+        <div class="gallery-viewer" id="galleryViewer">
+            
+            <div class="empty-tips" id="emptyTips">请点击上方按钮选择包含图片的文件夹</div>
+
+            <button class="nav-btn prev" id="prevBtn" style="display: none;" title="上一张 (←)">
+                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </button>
+
+            <div class="image-stage">
+                <img id="currentImage" src="" alt="Gallery Image" style="display: none;">
+            </div>
+
+            <button class="nav-btn next" id="nextBtn" style="display: none;" title="下一张 (→)">
+                <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </button>
+
+            <div class="page-badge" id="pageBadge" style="display: none;">0 / 0</div>
+        </div>
+
+        <!-- 底部缩略图导航栏 -->
+        <div class="thumbnails-bar" id="thumbnailsBar"></div>
+
+        <!-- 底部版权提示 -->
+        <p class="footer-note">
+            papawestray all rights reserved
+        </p>
+
+    </div>
+
+    <script>
+        let galleryData = []; // 动态存储图片 Blob URL
+        let currentIndex = 0;
+
+        const folderInput = document.getElementById('folderInput');
+        const currentImgEl = document.getElementById('currentImage');
+        const emptyTips = document.getElementById('emptyTips');
+        const badgeEl = document.getElementById('pageBadge');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const thumbsBar = document.getElementById('thumbnailsBar');
+
+        // 监听文件夹选择
+        folderInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            
+            // 1. 过滤出图片格式
+            const imageFiles = files.filter(file => file.type.startsWith('image/'));
+
+            if (imageFiles.length === 0) {
+                alert('所选文件夹中未找到图片！');
+                return;
+            }
+
+            // 2. 按照图片文件名自然排序 (例如: 1, 2, 10，而不是 1, 10, 2)
+            imageFiles.sort((a, b) => 
+                a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+            );
+
+            // 3. 释放之前创建的本地内存 URL
+            galleryData.forEach(url => URL.revokeObjectURL(url));
+
+            // 4. 生成可供浏览器读取的临时本地 URL 列表
+            galleryData = imageFiles.map(file => URL.createObjectURL(file));
+
+            // 5. 界面状态显示
+            emptyTips.style.display = 'none';
+            currentImgEl.style.display = 'block';
+            prevBtn.style.display = 'flex';
+            nextBtn.style.display = 'flex';
+            badgeEl.style.display = 'block';
+
+            currentIndex = 0;
+            initThumbnails();
+            updateGallery();
+        });
+
+        // 初始化缩略图
+        function initThumbnails() {
+            thumbsBar.innerHTML = '';
+            galleryData.forEach((url, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = `thumb-item ${index === currentIndex ? 'active' : ''}`;
+                thumb.onclick = () => jumpTo(index);
+
+                const img = document.createElement('img');
+                img.src = url;
+
+                thumb.appendChild(img);
+                thumbsBar.appendChild(thumb);
+            });
+        }
+
+        // 更新视图
+        function updateGallery() {
+            if (galleryData.length === 0) return;
+            const url = galleryData[currentIndex];
+            
+            currentImgEl.style.opacity = '0.3';
+            setTimeout(() => {
+                currentImgEl.src = url;
+                currentImgEl.style.opacity = '1';
+            }, 100);
+
+            badgeEl.textContent = `${currentIndex + 1} / ${galleryData.length}`;
+
+            const thumbs = thumbsBar.children;
+            Array.from(thumbs).forEach((thumb, i) => {
+                if (i === currentIndex) {
+                    thumb.classList.add('active');
+                    thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+
+        function prevImage() {
+            if (galleryData.length === 0) return;
+            currentIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+            updateGallery();
+        }
+
+        function nextImage() {
+            if (galleryData.length === 0) return;
+            currentIndex = (currentIndex + 1) % galleryData.length;
+            updateGallery();
+        }
+
+        function jumpTo(index) {
+            currentIndex = index;
+            updateGallery();
+        }
+
+        prevBtn.addEventListener('click', prevImage);
+        nextBtn.addEventListener('click', nextImage);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevImage();
+            if (e.key === 'ArrowRight') nextImage();
+        });
+    </script>
+</body>
+</html>
